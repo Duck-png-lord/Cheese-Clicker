@@ -5,260 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cheese Clicker 🧀</title>
   <style>
-    :root {
-      color-scheme: dark;
-      --gold: #ffd34e;
-      --panel: #28221b;
-      --panel2: #352b20;
-      --text: #fff8e8;
-      --muted: #c5b99f;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font: 16px/1.5 system-ui, sans-serif;
-      background:
-        radial-gradient(ellipse at top, #594222 0%, #211b15 55%, #15120f 100%);
-    }
-
-    header {
-      padding: 26px 16px 12px;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(2rem, 6vw, 3.4rem);
-      text-shadow: 0 3px 20px #ffbd3670;
-    }
-
-    header p { margin: 5px 0; color: var(--muted); }
-
-    main {
-      width: min(1100px, 94vw);
-      margin: 18px auto 40px;
-      display: grid;
-      grid-template-columns: minmax(260px, 0.85fr) minmax(300px, 1.15fr);
-      gap: 18px;
-    }
-
-    .panel {
-      border: 1px solid #ffffff18;
-      border-radius: 18px;
-      padding: 20px;
-      background: linear-gradient(145deg, #ffffff0b, #00000020), var(--panel);
-      box-shadow: 0 12px 35px #00000035;
-    }
-
-    .game-panel {
-      position: sticky;
-      top: 16px;
-      height: fit-content;
-      text-align: center;
-    }
-
-    .cheese-button {
-      display: block;
-      width: min(230px, 68vw);
-      aspect-ratio: 1;
-      margin: 20px auto;
-      border: 0;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: clamp(6rem, 18vw, 9rem);
-      background: radial-gradient(circle at 35% 25%, #fff2a3, #ffc329 62%, #d8870c);
-      box-shadow: 0 12px 0 #9b600b, 0 18px 32px #0007, inset 0 5px 10px #fff9;
-      transition: transform .08s, box-shadow .08s;
-      user-select: none;
-    }
-
-    .cheese-button:hover { transform: translateY(-3px); }
-    .cheese-button:active {
-      transform: translateY(7px) scale(.97);
-      box-shadow: 0 4px 0 #9b600b, 0 8px 16px #0007, inset 0 5px 10px #fff9;
-    }
-
-    .count {
-      margin: 5px 0 0;
-      font-size: clamp(2rem, 7vw, 3.2rem);
-      font-weight: 900;
-      color: var(--gold);
-      overflow-wrap: anywhere;
-    }
-
-    .stat { color: var(--muted); margin: 4px; }
-    .progress {
-      height: 13px;
-      margin: 14px 0 5px;
-      overflow: hidden;
-      border-radius: 99px;
-      background: #100e0c;
-      border: 1px solid #ffffff20;
-    }
-    .progress > div {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ff9d24, #fff06b);
-      transition: width .25s;
-    }
-
-    .shop-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    h2 { margin: 0; color: var(--gold); }
-    .shop-heading span { color: var(--muted); }
-
-    .upgrade-list {
-      display: grid;
-      gap: 9px;
-      margin-top: 14px;
-    }
-
-    .upgrade {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #ffffff17;
-      border-radius: 12px;
-      text-align: left;
-      color: var(--text);
-      background: var(--panel2);
-      cursor: pointer;
-      transition: background .15s, transform .15s, opacity .15s;
-    }
-
-    .upgrade:hover:not(:disabled) {
-      background: #49391f;
-      transform: translateY(-1px);
-    }
-
-    .upgrade:disabled { cursor: not-allowed; opacity: .48; }
-    .upgrade strong { display: block; }
-    .upgrade small { display: block; color: var(--muted); }
-    .cost { color: var(--gold); font-weight: 800; white-space: nowrap; }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .controls button, .ending button {
-      border: 1px solid #ffffff25;
-      border-radius: 9px;
-      padding: 8px 12px;
-      color: var(--text);
-      background: #ffffff12;
-      cursor: pointer;
-    }
-
-    .controls button:hover, .ending button:hover { background: #ffffff25; }
-
-    .ending {
-      position: fixed;
-      z-index: 5;
-      inset: 0;
-      display: none;
-      place-items: center;
-      padding: 20px;
-      background: #090705eF;
-    }
-
-    .ending-card {
-      width: min(580px, 100%);
-      padding: 35px 24px;
-      border: 2px solid var(--gold);
-      border-radius: 22px;
-      text-align: center;
-      background: linear-gradient(145deg, #493719, #201a14);
-      box-shadow: 0 0 70px #ffbd3655;
-      animation: pop .45s ease-out;
-    }
-
-    .ending-card h2 { font-size: clamp(2rem, 8vw, 3.5rem); }
-    .ending-card p { font-size: 1.25rem; }
-    .ending-card .big-cheese { font-size: 5rem; }
-
-    @keyframes pop {
-      from { transform: scale(.75); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    @media (max-width: 740px) {
-      main { grid-template-columns: 1fr; }
-      .game-panel { position: static; }
-    }
+    :root { color-scheme: dark; --gold:#ffd34e; --panel:#28221b; --panel2:#352b20; --text:#fff8e8; --muted:#c5b99f; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; color:var(--text); font:16px/1.5 system-ui,sans-serif; background:radial-gradient(ellipse at top,#594222 0%,#211b15 55%,#15120f 100%); }
+    header { padding:26px 16px 12px; text-align:center; }
+    h1 { margin:0; color:var(--gold); font-size:clamp(2rem,6vw,3.4rem); text-shadow:0 3px 20px #ffbd3670; }
+    header p { margin:5px 0; color:var(--muted); }
+    main { width:min(1100px,94vw); margin:18px auto 40px; display:grid; grid-template-columns:minmax(260px,.85fr) minmax(300px,1.15fr); gap:18px; }
+    .panel { border:1px solid #ffffff18; border-radius:18px; padding:20px; background:linear-gradient(145deg,#ffffff0b,#00000020),var(--panel); box-shadow:0 12px 35px #00000035; }
+    .game-panel { position:sticky; top:16px; height:fit-content; text-align:center; }
+    .cheese-button { display:block; width:min(230px,68vw); aspect-ratio:1; margin:20px auto; border:0; border-radius:50%; cursor:pointer; font-size:clamp(6rem,18vw,9rem); background:radial-gradient(circle at 35% 25%,#fff2a3,#ffc329 62%,#d8870c); box-shadow:0 12px 0 #9b600b,0 18px 32px #0007,inset 0 5px 10px #fff9; transition:transform .08s,box-shadow .08s; user-select:none; }
+    .cheese-button:hover { transform:translateY(-3px); }
+    .cheese-button:active { transform:translateY(7px) scale(.97); box-shadow:0 4px 0 #9b600b,0 8px 16px #0007,inset 0 5px 10px #fff9; }
+    .count { margin:5px 0 0; font-size:clamp(2rem,7vw,3.2rem); font-weight:900; color:var(--gold); overflow-wrap:anywhere; }
+    .stat { color:var(--muted); margin:4px; }
+    .progress { height:13px; margin:14px 0 5px; overflow:hidden; border-radius:99px; background:#100e0c; border:1px solid #ffffff20; }
+    .progress>div { height:100%; width:0%; background:linear-gradient(90deg,#ff9d24,#fff06b); transition:width .25s; }
+    .shop-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    h2 { margin:0; color:var(--gold); }
+    .shop-heading span { color:var(--muted); }
+    .upgrade-list { display:grid; gap:9px; margin-top:14px; }
+    .upgrade { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; width:100%; padding:12px 14px; border:1px solid #ffffff17; border-radius:12px; text-align:left; color:var(--text); background:var(--panel2); cursor:pointer; transition:background .15s,transform .15s,opacity .15s; }
+    .upgrade:hover:not(:disabled) { background:#49391f; transform:translateY(-1px); }
+    .upgrade:disabled { cursor:not-allowed; opacity:.48; }
+    .upgrade strong,.upgrade small { display:block; }
+    .upgrade small { color:var(--muted); }
+    .cost { color:var(--gold); font-weight:800; white-space:nowrap; }
+    .controls { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-top:14px; }
+    .controls button,.ending button { border:1px solid #ffffff25; border-radius:9px; padding:8px 12px; color:var(--text); background:#ffffff12; cursor:pointer; }
+    .controls button:hover,.ending button:hover { background:#ffffff25; }
+    .ending { position:fixed; z-index:5; inset:0; display:none; place-items:center; padding:20px; background:#090705ef; }
+    .ending-card { width:min(580px,100%); padding:35px 24px; border:2px solid var(--gold); border-radius:22px; text-align:center; background:linear-gradient(145deg,#493719,#201a14); box-shadow:0 0 70px #ffbd3655; animation:pop .45s ease-out; }
+    .ending-card h2 { font-size:clamp(2rem,8vw,3.5rem); }
+    .ending-card p { font-size:1.25rem; }
+    .ending-card .big-cheese { font-size:5rem; }
+    @keyframes pop { from { transform:scale(.75); opacity:0; } to { transform:scale(1); opacity:1; } }
+    @media(max-width:740px) { main { grid-template-columns:1fr; } .game-panel { position:static; } }
   </style>
 </head>
 <body>
   <header>
     <h1>🧀 Cheese Clicker 🧀</h1>
-    <p>Click cheese. Buy upgrades. Become the big cheese.</p>
+    <p>Click cheese. Buy all 60 upgrades. Become the big cheese!</p>
   </header>
-
   <main>
     <section class="panel game-panel">
-      <div class="count" id="cheeseCount">0</div>
-      <div class="stat">cheese</div>
-
-      <button class="cheese-button" id="clickButton" aria-label="Click to collect cheese">
-        🧀
-      </button>
-
+      <div class="count" id="cheeseCount">0</div><div class="stat">cheese</div>
+      <button class="cheese-button" id="clickButton" aria-label="Click to collect cheese">🧀</button>
       <div class="stat" id="rate">+1 per click · 0 per second</div>
-      <div class="progress"><div id="progressBar"></div></div>
-      <div class="stat" id="goalText">0 / 1,000,000,000 cheese</div>
-
-      <div class="controls">
-        <button id="saveButton">Save</button>
-        <button id="resetButton">Reset game</button>
-      </div>
+      <div class="progress" role="progressbar" aria-label="Progress to one billion cheese" aria-valuemin="0" aria-valuemax="100"><div id="progressBar"></div></div>
+      <div class="stat" id="goalText">0 / 1B cheese</div>
+      <div class="controls"><button id="saveButton">Save</button><button id="resetButton">Reset game</button></div>
     </section>
-
     <section class="panel">
-      <div class="shop-heading">
-        <h2>Upgrade Shop</h2>
-        <span id="upgradeCount">0 / 60 owned</span>
-      </div>
+      <div class="shop-heading"><h2>Upgrade Shop</h2><span id="upgradeCount">0 / 60 owned</span></div>
       <div class="upgrade-list" id="upgradeList"></div>
     </section>
   </main>
-
-  <div class="ending" id="ending">
-    <div class="ending-card">
-      <div class="big-cheese">🧀🏆</div>
-      <h2>Well Done!</h2>
-      <p>Now go sub to <strong>@Ducks_UK on YT</strong></p>
-      <button id="continueButton">Keep playing</button>
-    </div>
+  <div class="ending" id="ending" role="dialog" aria-modal="true" aria-labelledby="endingTitle">
+    <div class="ending-card"><div class="big-cheese">🧀🏆</div><h2 id="endingTitle">Well Done</h2><p>Now go sub to <strong>@Ducks_UK on YT</strong></p><button id="continueButton">Keep playing</button></div>
   </div>
-
   <script>
     (() => {
       "use strict";
-
       const GOAL = 1_000_000_000;
       const SAVE_KEY = "cheeseClickerSave_v1";
-
       const upgradeNames = [
         "Cheese Knife", "Mouse Helper", "Tiny Dairy", "Cheddar Cow", "Cheese Cart",
         "Milk Bucket", "Swiss Wheel", "Mouse Trio", "Creamery", "Cheese Mine",
         "Golden Spoon", "Mouse Squad", "Big Dairy", "Moon Cheese Lab", "Curd Cannon",
-        "Cheese Factory", "Royal Mouse", "Milk geyser", "Deep Cheese Drill", "Mega Creamery",
+        "Cheese Factory", "Royal Mouse", "Milk Geyser", "Deep Cheese Drill", "Mega Creamery",
         "Cheddar Blimp", "Mouse Army", "Cheese Reactor", "Asteroid Miner", "Dairy Dimension",
         "Quantum Mouse", "Golden Cow", "Cheese Volcano", "Interstellar Creamery",
         "Time-Traveling Cheese", "Mouse Planet", "Curd Collider", "Cosmic Cow",
@@ -272,151 +88,80 @@
         "Cheese Moon Network", "Reality-Sized Wheel", "Ultimate Dairy",
         "One Billion Cheese Machine"
       ];
-
-      // Costs rise steadily while production increases more quickly near the end.
-      // With regular clicking and upgrade purchases, the goal is tuned for ~20 minutes.
+      // Costs and production are paced together: all 60 upgrades remain affordable,
+      // and a full shop is tuned to reach the 1B finale in roughly 20 minutes of play.
       const upgrades = upgradeNames.map((name, i) => ({
         name,
-        cost: Math.floor(35 * Math.pow(1.47, i)),
-        cps: Math.max(1, Math.floor(0.8 * Math.pow(1.49, i))),
-        click: i % 4 === 0 ? Math.max(1, Math.floor(1.4 * Math.pow(1.42, i))) : 0
+        cost: Math.floor(20 * Math.pow(1.25, i)),
+        cps: Math.max(1, Math.floor(0.8 * Math.pow(1.24, i))),
+        click: i % 4 === 0 ? Math.max(1, Math.floor(1.3 * Math.pow(1.20, i))) : 0
       }));
-
-      let cheese = 0;
-      let totalClicks = 0;
-      let owned = Array(upgrades.length).fill(false);
-      let won = false;
-
+      let cheese = 0, owned = Array(upgrades.length).fill(false), won = false;
       const $ = id => document.getElementById(id);
-      const countEl = $("cheeseCount");
-      const rateEl = $("rate");
-      const goalEl = $("goalText");
-      const barEl = $("progressBar");
-      const listEl = $("upgradeList");
-
+      const countEl = $("cheeseCount"), rateEl = $("rate"), goalEl = $("goalText"), barEl = $("progressBar"), listEl = $("upgradeList");
       const format = n => {
         if (n < 1_000_000) return Math.floor(n).toLocaleString();
         const units = ["M", "B", "T", "Qa", "Qi"];
-        let value = n;
-        let unit = -1;
-        while (value >= 1000 && unit < units.length - 1) {
-          value /= 1000;
-          unit++;
-        }
+        let value = n, unit = -1;
+        while (value >= 1000 && unit < units.length - 1) { value /= 1000; unit++; }
         return value.toFixed(value >= 100 ? 0 : value >= 10 ? 1 : 2) + units[unit];
       };
-
       const totalCps = () => owned.reduce((sum, has, i) => sum + (has ? upgrades[i].cps : 0), 0);
       const clickPower = () => 1 + owned.reduce((sum, has, i) => sum + (has ? upgrades[i].click : 0), 0);
-
       function renderShop() {
-        listEl.innerHTML = "";
+        listEl.replaceChildren();
         upgrades.forEach((upgrade, i) => {
           const button = document.createElement("button");
           button.className = "upgrade";
           button.disabled = owned[i] || cheese < upgrade.cost || won;
-          button.innerHTML = `
-            <span>
-              <strong>${String(i + 1).padStart(2, "0")}. ${upgrade.name}</strong>
-              <small>+${format(upgrade.cps)} cheese/sec${upgrade.click ? ` · +${format(upgrade.click)} per click` : ""}</small>
-            </span>
-            <span class="cost">${owned[i] ? "OWNED" : `${format(upgrade.cost)} 🧀`}</span>
-          `;
-          button.addEventListener("click", () => buyUpgrade(i));
-          listEl.appendChild(button);
+          const info = document.createElement("span"), title = document.createElement("strong"), detail = document.createElement("small"), cost = document.createElement("span");
+          title.textContent = `${String(i + 1).padStart(2, "0")}. ${upgrade.name}`;
+          detail.textContent = `+${format(upgrade.cps)} cheese/sec${upgrade.click ? ` · +${format(upgrade.click)} per click` : ""}`;
+          cost.className = "cost"; cost.textContent = owned[i] ? "OWNED" : `${format(upgrade.cost)} 🧀`;
+          info.append(title, detail); button.append(info, cost); button.addEventListener("click", () => buyUpgrade(i)); listEl.appendChild(button);
         });
       }
-
       function render() {
         countEl.textContent = format(cheese);
         rateEl.textContent = `+${format(clickPower())} per click · ${format(totalCps())} per second`;
         goalEl.textContent = `${format(Math.min(cheese, GOAL))} / 1B cheese`;
-        barEl.style.width = `${Math.min(100, cheese / GOAL * 100)}%`;
+        const progress = Math.min(100, cheese / GOAL * 100);
+        barEl.style.width = `${progress}%`; barEl.parentElement.setAttribute("aria-valuenow", String(Math.floor(progress)));
         $("upgradeCount").textContent = `${owned.filter(Boolean).length} / 60 owned`;
         renderShop();
         if (cheese >= GOAL && !won) win();
       }
-
-      function win() {
-        won = true;
-        $("ending").style.display = "grid";
-        save();
-      }
-
+      function win() { won = true; $("ending").style.display = "grid"; save(); }
       function buyUpgrade(i) {
         const upgrade = upgrades[i];
         if (owned[i] || cheese < upgrade.cost || won) return;
-        cheese -= upgrade.cost;
-        owned[i] = true;
-        render();
-        save();
+        cheese -= upgrade.cost; owned[i] = true; render(); save();
       }
-
       function save() {
-        localStorage.setItem(SAVE_KEY, JSON.stringify({
-          cheese, totalClicks, owned, won, savedAt: Date.now()
-        }));
+        try { localStorage.setItem(SAVE_KEY, JSON.stringify({ cheese, owned, won, savedAt: Date.now() })); } catch { /* Storage may be unavailable in private browsing. */ }
       }
-
       function load() {
         try {
           const data = JSON.parse(localStorage.getItem(SAVE_KEY));
-          if (!data) return;
+          if (!data || typeof data !== "object") return;
           cheese = Math.max(0, Number(data.cheese) || 0);
-          totalClicks = Math.max(0, Number(data.totalClicks) || 0);
-          if (Array.isArray(data.owned)) {
-            owned = upgrades.map((_, i) => Boolean(data.owned[i]));
-          }
+          if (Array.isArray(data.owned)) owned = upgrades.map((_, i) => Boolean(data.owned[i]));
           won = Boolean(data.won);
-
-          // Give a small amount of offline production, capped at 8 hours.
-          const elapsed = Math.min(8 * 60 * 60, Math.max(0, (Date.now() - data.savedAt) / 1000));
+          const savedAt = Number(data.savedAt) || Date.now();
+          const elapsed = Math.min(8 * 60 * 60, Math.max(0, (Date.now() - savedAt) / 1000));
           cheese += totalCps() * elapsed;
-        } catch {
-          localStorage.removeItem(SAVE_KEY);
-        }
+        } catch { localStorage.removeItem(SAVE_KEY); }
       }
-
-      $("clickButton").addEventListener("click", () => {
-        if (won) return;
-        cheese += clickPower();
-        totalClicks++;
-        render();
-      });
-
-      $("saveButton").addEventListener("click", () => {
-        save();
-        $("saveButton").textContent = "Saved!";
-        setTimeout(() => $("saveButton").textContent = "Save", 900);
-      });
-
+      $("clickButton").addEventListener("click", () => { if (!won) { cheese += clickPower(); render(); save(); } });
+      $("saveButton").addEventListener("click", () => { save(); $("saveButton").textContent = "Saved!"; setTimeout(() => $("saveButton").textContent = "Save", 900); });
       $("resetButton").addEventListener("click", () => {
         if (!confirm("Reset all cheese and upgrades?")) return;
-        localStorage.removeItem(SAVE_KEY);
-        cheese = 0;
-        totalClicks = 0;
-        owned = Array(upgrades.length).fill(false);
-        won = false;
-        $("ending").style.display = "none";
-        render();
+        localStorage.removeItem(SAVE_KEY); cheese = 0; owned = Array(upgrades.length).fill(false); won = false; $("ending").style.display = "none"; render();
       });
-
-      $("continueButton").addEventListener("click", () => {
-        $("ending").style.display = "none";
-      });
-
-      setInterval(() => {
-        if (!won) {
-          cheese += totalCps();
-          render();
-        }
-        save();
-      }, 1000);
-
-      load();
-      render();
+      $("continueButton").addEventListener("click", () => { $("ending").style.display = "none"; });
+      setInterval(() => { if (!won) { cheese += totalCps(); render(); } save(); }, 1000);
+      load(); render();
     })();
   </script>
 </body>
 </html>
-``
